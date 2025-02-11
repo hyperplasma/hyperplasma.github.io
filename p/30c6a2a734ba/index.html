@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico">
+  <link rel="mask-icon" href="/images/favicon-32x32.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hyperplasma.github.io.git","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","width":220,"display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="常用算法代码模板（C++）——基础算法：排序、二分、高精度、前缀和与差分、位运算、双指针、离散化、区间合并">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++算法模板（1）：基础算法">
+<meta property="og:url" content="https://hyperplasma.github.io.git/p/30c6a2a734ba/">
+<meta property="og:site_name" content="Hyperplasma">
+<meta property="og:description" content="常用算法代码模板（C++）——基础算法：排序、二分、高精度、前缀和与差分、位运算、双指针、离散化、区间合并">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.hyperplasma.top/wp-content/uploads/2024/08/aa4d845c5da05f9e6a5446f61d4d346f-1024x263.png">
+<meta property="og:image" content="https://www.hyperplasma.top/wp-content/uploads/2024/08/6c40dff7f90f97ae3862023483f9e1d6-1024x602.png">
+<meta property="og:image" content="https://www.hyperplasma.top/wp-content/uploads/2024/08/a7eacaf9d9db7097bef3396f371fab37-1024x455.png">
+<meta property="og:image" content="https://www.hyperplasma.top/wp-content/uploads/2024/08/00e4c1a9c31ed3cd0f74a9109a008c08-300x258.png">
+<meta property="og:image" content="https://www.hyperplasma.top/wp-content/uploads/2024/08/02e876c1c30e31347bd366270e3de295-1024x339.png">
+<meta property="og:image" content="https://www.hyperplasma.top/wp-content/uploads/2024/08/3e19471c67d2e011231f5df057af83e9-300x243.png">
+<meta property="og:image" content="https://www.hyperplasma.top/wp-content/uploads/2024/08/4f51f114e834590a131d60a4e160519a-1024x480.png">
+<meta property="article:published_time" content="2024-07-31T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-11T09:52:25.143Z">
+<meta property="article:author" content="Akira37">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.hyperplasma.top/wp-content/uploads/2024/08/aa4d845c5da05f9e6a5446f61d4d346f-1024x263.png">
+
+<link rel="canonical" href="https://hyperplasma.github.io.git/p/30c6a2a734ba/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>C++算法模板（1）：基础算法 | Hyperplasma</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Hyperplasma" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hyperplasma</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于我</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hyperplasma.github.io.git/p/30c6a2a734ba/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/hyperplasma-logo-v1-white-bg.png">
+      <meta itemprop="name" content="Akira37">
+      <meta itemprop="description" content="实用编程技术教程">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hyperplasma">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C++算法模板（1）：基础算法
+        </h1>
+
+        <div class="post-meta">
+
+        
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-08-01 00:00:00" itemprop="dateCreated datePublished" datetime="2024-08-01T00:00:00+08:00">2024-08-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-02-11 17:52:25" itemprop="dateModified" datetime="2025-02-11T17:52:25+08:00">2025-02-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">数据结构与算法</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>常用算法代码模板（C++）——基础算法：排序、二分、高精度、前缀和与差分、位运算、双指针、离散化、区间合并</p>
+<span id="more"></span>
+<h2 id="1-排序"><a class="markdownIt-Anchor" href="#1-排序"></a> 1 排序</h2>
+<p><code>std::sort(begin, end, cmp)</code></p>
+<h3 id="11-直接插入排序"><a class="markdownIt-Anchor" href="#11-直接插入排序"></a> 1.1 直接插入排序</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> q[N];	<span class="comment">// q[0 ... n-1]</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">insert_sort</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> j = i; j &gt;= <span class="number">1</span> &amp;&amp; q[j] &gt; q[j - <span class="number">1</span>]; j--) &#123;</span><br><span class="line">			<span class="built_in">swap</span>(q[j], q[j - <span class="number">1</span>]);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="12-快速排序"><a class="markdownIt-Anchor" href="#12-快速排序"></a> 1.2 快速排序</h3>
+<ol>
+<li>确定枢轴：通常从 <code>q[l]</code>、<code>q[l + r &gt;&gt; 1]</code>、<code>q[r]</code>之中任选一个</li>
+<li>划分子区间：双指针 <code>i</code>、<code>j</code>初始位于待排区间<strong>两侧外</strong>，先 <code>i</code>后 <code>j</code>相向而行，最终使得左右子区间 <code>q[l ... j]</code>、<code>q[j+1 ... r]</code><strong>左小右大</strong></li>
+<li>递归排序左右子区间（该写法<strong>左子区间右端点必须为 <code>j</code></strong>）</li>
+</ol>
+<p><img src="https://www.hyperplasma.top/wp-content/uploads/2024/08/aa4d845c5da05f9e6a5446f61d4d346f-1024x263.png" alt="快速排序" /></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> q[N];	<span class="comment">// q[l ... r]</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">quick_sort</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l &gt;= r) <span class="keyword">return</span>;	<span class="comment">// 只剩一个数或没有数了则不排序</span></span><br><span class="line">  </span><br><span class="line">    <span class="type">int</span> x = q[l + r &gt;&gt; <span class="number">1</span>];		<span class="comment">// 枢轴（可选 q[l]、q[l + r &gt;&gt; 1]、q[r]）</span></span><br><span class="line">    <span class="type">int</span> i = l - <span class="number">1</span>, j = r + <span class="number">1</span>;	<span class="comment">// 双指针初始位于两侧外（追加1偏移量）</span></span><br><span class="line">    <span class="keyword">while</span> (i &lt; j) &#123;	<span class="comment">// 进行一轮划分操作</span></span><br><span class="line">        <span class="keyword">do</span> i++; <span class="keyword">while</span> (q[i] &lt; x);</span><br><span class="line">        <span class="keyword">do</span> j--; <span class="keyword">while</span> (q[j] &gt; x);</span><br><span class="line">        <span class="keyword">if</span> (i &lt; j) <span class="built_in">swap</span>(q[i], q[j]);</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    <span class="built_in">quick_sort</span>(l, j);	<span class="comment">// 左子区间右端点必须为j</span></span><br><span class="line">	<span class="built_in">quick_sort</span>(j + <span class="number">1</span>, r);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="13-归并排序"><a class="markdownIt-Anchor" href="#13-归并排序"></a> 1.3 归并排序</h3>
+<ol>
+<li>确定分界点：<code>mid = l + r &gt;&gt; 1</code></li>
+<li>递归排序左右子区间</li>
+<li>归并左右子区间为有序子区间：挑出两者较小值，<strong>相等则优先归并 <code>q[i]</code></strong>，使得排序<strong>稳定</strong></li>
+</ol>
+<p><img src="https://www.hyperplasma.top/wp-content/uploads/2024/08/6c40dff7f90f97ae3862023483f9e1d6-1024x602.png" alt="归并排序" /></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> q[N];	<span class="comment">// q[l ... r]</span></span><br><span class="line"><span class="type">int</span> tmp[N];	<span class="comment">// 辅助数组tmp临时存放新区间</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">merge_sort</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l &gt;= r) <span class="keyword">return</span>;		<span class="comment">// 只剩一个数或没有数了则不排序</span></span><br><span class="line">  </span><br><span class="line">    <span class="type">int</span> mid = l + r &gt;&gt; <span class="number">1</span>;	<span class="comment">// 确认分界点：左[l, mid]、右[mid + 1, r]</span></span><br><span class="line">	<span class="built_in">merge_sort</span>(l, mid);</span><br><span class="line">	<span class="built_in">merge_sort</span>(mid + <span class="number">1</span>, r);</span><br><span class="line">  </span><br><span class="line">    <span class="type">int</span> k = <span class="number">0</span>, i = l, j = mid + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= mid &amp;&amp; j &lt;= r)		<span class="comment">// 归并左右子区间为有序子区间：挑出两者较小值</span></span><br><span class="line">        <span class="keyword">if</span> (q[i] &lt;= q[j]) &#123;</span><br><span class="line">			tmp[k++] = q[i++];	<span class="comment">// 相等则优先归并q[i]，否则排序不稳定</span></span><br><span class="line">    	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			tmp[k++] = q[j++];</span><br><span class="line">		&#125;</span><br><span class="line">	<span class="keyword">while</span> (i &lt;= mid) &#123;</span><br><span class="line">		tmp[k++] = q[i++];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span> (j &lt;= r) &#123;</span><br><span class="line">		tmp[k++] = q[j++];</span><br><span class="line">	&#125;</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">for</span> (i = l, j = <span class="number">0</span>; i &lt;= r; ++i, ++j) &#123;</span><br><span class="line">        q[i] = tmp[j];	<span class="comment">// 将tmp[0 ... r-l+1]复制给q[l ... r]</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="2-二分"><a class="markdownIt-Anchor" href="#2-二分"></a> 2 二分</h2>
+<p>整数二分：<a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/791/">AcWing 789. 数的范围</a></p>
+<ol>
+<li>中点将区间划分出左右两子区间</li>
+<li>判断中间点是否满足某侧区间的性质 <code>check(mid)</code>，查找x边界，目标在x区间，检测x区间性质。易知该种写法<strong>条件检测始终为&quot;≥&quot;或&quot;≤&quot;</strong>，对应下文记号<code>check_ge()</code>（greater_equal）、<code>check_le()</code>（less_equal），对比目标和中点的位置关系即可得出条件检测函数。</li>
+<li>返回所检测的x区间的端点x</li>
+</ol>
+<blockquote>
+<p>当查找右边界时中点应为<code>l + r + 1 &gt;&gt; 1</code>，简记：有(“右”) 加必有(“右”) 减</p>
+</blockquote>
+<p>浮点数二分：类似整数二分的<strong>查找左边界</strong>，常写作<code>f(mid) &gt;= target</code>的形式。解唯一，无需处理边界。要注意浮点精度问题。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 查找左边界，即第一个满足条件的元素下标 (lower_bound) */</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">bsearch_l</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (l &lt; r) &#123;</span><br><span class="line">        <span class="type">int</span> mid = l + r &gt;&gt; <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">if</span> (<span class="built_in">check_ge</span>(mid, target)) &#123;</span><br><span class="line">			r = mid;		<span class="comment">// 目标在左，mid所指&gt;=目标：带mid去左边[l, mid]</span></span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			l = mid + <span class="number">1</span>;	<span class="comment">// 否则去右边 [mid + 1, r]</span></span><br><span class="line">		&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> l;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 查找右边界，即最后一个满足条件的元素下标 (upper_bound的前驱) */</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">bsearch_r</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (l &lt; r) &#123;</span><br><span class="line">        <span class="type">int</span> mid = l + r + <span class="number">1</span> &gt;&gt; <span class="number">1</span>;			<span class="comment">// 有(“右”)加必有(“右”)减</span></span><br><span class="line">		<span class="keyword">if</span> (<span class="built_in">check_le</span>(mid, target)) &#123;</span><br><span class="line">			l = mid;		<span class="comment">// 目标在右，mid所指&lt;=目标：带mid去右边[mid, r]</span></span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			r = mid - <span class="number">1</span>;	<span class="comment">// 否则去左边: [l, mid - 1]</span></span><br><span class="line">		&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 浮点数二分 */</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">bsearch_f</span><span class="params">(<span class="type">double</span> l, <span class="type">double</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="type">const</span> <span class="type">double</span> eps = <span class="number">1e-8</span>;		<span class="comment">// 精度，视题目而定</span></span><br><span class="line">    <span class="keyword">while</span> (r - l &gt; eps) &#123;</span><br><span class="line">        <span class="type">double</span> mid = (l + r) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">check_ge</span>(mid, target)) &#123;</span><br><span class="line">			r = mid;		<span class="comment">// 目标在左，mid所指&gt;=目标。注意浮点关系运算精度问题</span></span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			l = mid;		<span class="comment">// 边界均无需+1或-1</span></span><br><span class="line">		&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> l;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="3-c高精度运算"><a class="markdownIt-Anchor" href="#3-c高精度运算"></a> 3 C++高精度运算</h2>
+<p>C++使用变长数组<code>vector&lt;int&gt;</code>存储大整数及其属性，低位存于低位。亦可自定义结构体实现。</p>
+<h3 id="31-高精度加法"><a class="markdownIt-Anchor" href="#31-高精度加法"></a> 3.1 高精度加法</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* C = A + B, A &gt;= 0, B &gt;= 0 */</span></span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">add</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;A, vector&lt;<span class="type">int</span>&gt; &amp;B)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (A.<span class="built_in">size</span>() &lt; B.<span class="built_in">size</span>()) <span class="keyword">return</span> <span class="built_in">add</span>(B, A);</span><br><span class="line">  </span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; C;</span><br><span class="line">    <span class="type">int</span> t = <span class="number">0</span>;	<span class="comment">// 进位</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; A.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        t += A[i];</span><br><span class="line">        <span class="keyword">if</span> (i &lt; B.<span class="built_in">size</span>()) t += B[i];</span><br><span class="line">        C.<span class="built_in">push_back</span>(t % <span class="number">10</span>);</span><br><span class="line">        t /= <span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">if</span> (t) &#123;</span><br><span class="line">		C.<span class="built_in">push_back</span>(t);	<span class="comment">// 存入最后的进位</span></span><br><span class="line">	&#125;</span><br><span class="line">    <span class="keyword">return</span> C;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="32-高精度减法"><a class="markdownIt-Anchor" href="#32-高精度减法"></a> 3.2 高精度减法</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 比较两个高精度整数的大小，返回A - B的符号 */</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">cmp</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;A, vector&lt;<span class="type">int</span>&gt; &amp;B)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (A.<span class="built_in">size</span>() &gt; B.<span class="built_in">size</span>()) <span class="keyword">return</span> <span class="number">1</span>;	<span class="comment">// 优先比较长度</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (A.<span class="built_in">size</span>() &lt; B.<span class="built_in">size</span>()) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = A.<span class="built_in">size</span>() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--)	<span class="comment">// 从高位起逐位比较</span></span><br><span class="line">        <span class="keyword">if</span> (A[i] &gt; B[i]) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    	<span class="keyword">else</span> <span class="keyword">if</span> (A[i] &lt; B[i]) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* C = A - B, A &gt;= B, A &gt;= 0, B &gt;= 0 */</span></span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">sub</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;A, vector&lt;<span class="type">int</span>&gt; &amp;B)</span> </span>&#123;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; C;</span><br><span class="line">    <span class="type">int</span> t = <span class="number">0</span>;	<span class="comment">// 借位</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; A.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        t = A[i] - t;	<span class="comment">// 成为本轮的被减数</span></span><br><span class="line">        <span class="keyword">if</span> (i &lt; B.<span class="built_in">size</span>()) t -= B[i];	<span class="comment">// 先直接相减，t&lt;0则说明需借位</span></span><br><span class="line">        C.<span class="built_in">push_back</span>((t + <span class="number">10</span>) % <span class="number">10</span>);		<span class="comment">// 若t&lt;0，则存的是借位后的差；否则正常存差</span></span><br><span class="line">        <span class="keyword">if</span> (t &lt; <span class="number">0</span>) &#123;	<span class="comment">// 判断是否需借位</span></span><br><span class="line">			t = <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			t = <span class="number">0</span>;</span><br><span class="line">		&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">while</span> (C.<span class="built_in">size</span>() &gt; <span class="number">1</span> &amp;&amp; C.<span class="built_in">back</span>() == <span class="number">0</span>) &#123;</span><br><span class="line">		C.<span class="built_in">pop_back</span>();	<span class="comment">// 去除前导0（结果为0则保留1位）</span></span><br><span class="line">	&#125;</span><br><span class="line">    <span class="keyword">return</span> C;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="33-高精度乘低精度"><a class="markdownIt-Anchor" href="#33-高精度乘低精度"></a> 3.3 高精度乘低精度</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* C = A * b, A &gt;= 0, b &gt;= 0 */</span></span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">mul</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;A, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; C;</span><br><span class="line">    <span class="type">int</span> t = <span class="number">0</span>;	<span class="comment">// 进位</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; A.<span class="built_in">size</span>() || t; i++) &#123;	<span class="comment">// 自动处理最后剩余进位(i&gt;=size但t&gt;0)</span></span><br><span class="line">        <span class="keyword">if</span> (i &lt; A.<span class="built_in">size</span>()) t += A[i] * b;</span><br><span class="line">        C.<span class="built_in">push_back</span>(t % <span class="number">10</span>);</span><br><span class="line">        t /= <span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// if (t) C.push_back(t);</span></span><br><span class="line">    <span class="keyword">while</span> (C.<span class="built_in">size</span>() &gt; <span class="number">1</span> &amp;&amp; C.<span class="built_in">back</span>() == <span class="number">0</span>) &#123;</span><br><span class="line">		C.<span class="built_in">pop_back</span>();	<span class="comment">// b为0时，需去除前导0</span></span><br><span class="line">	&#125;</span><br><span class="line">    <span class="keyword">return</span> C;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="34-高精度除以低精度"><a class="markdownIt-Anchor" href="#34-高精度除以低精度"></a> 3.4 高精度除以低精度</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* A / b = C ... r, A &gt;= 0, b &gt; 0 */</span></span><br><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">div</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;A, <span class="type">int</span> b, <span class="type">int</span> &amp;r)</span> </span>&#123;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; C;</span><br><span class="line">    r = <span class="number">0</span>;	<span class="comment">// 余数</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = A.<span class="built_in">size</span>() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;	<span class="comment">// 从最高位开始除</span></span><br><span class="line">        r = r * <span class="number">10</span> + A[i];</span><br><span class="line">        C.<span class="built_in">push_back</span>(r / b);	<span class="comment">// 暂时将高位存于低位</span></span><br><span class="line">        r %= b;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    <span class="built_in">reverse</span>(C.<span class="built_in">begin</span>(), C.<span class="built_in">end</span>());	<span class="comment">// 逆转后即为正常存储形式</span></span><br><span class="line">    <span class="keyword">while</span> (C.<span class="built_in">size</span>() &gt; <span class="number">1</span> &amp;&amp; C.<span class="built_in">back</span>() == <span class="number">0</span>) &#123;</span><br><span class="line">		C.<span class="built_in">pop_back</span>();</span><br><span class="line">	&#125;</span><br><span class="line">    <span class="keyword">return</span> C;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-前缀和-差分"><a class="markdownIt-Anchor" href="#4-前缀和-差分"></a> 4 前缀和、差分</h2>
+<blockquote>
+<p>以下前缀和与差分数组必须从下标1开始存储</p>
+</blockquote>
+<h3 id="41-一维前缀和"><a class="markdownIt-Anchor" href="#41-一维前缀和"></a> 4.1 一维前缀和</h3>
+<p>对于数列<code>a[1], a[2], ... , a[n]</code>，规定<code>a[i]</code>的<strong>前缀和</strong>为前<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathnormal">i</span></span></span></span>个数的和：<code>s[i] = a[1] + a[2] + ... + a[i] (i &gt;= 1)</code></p>
+<p>求法：<code>s[0] = 0, s[i] = s[i - 1] + a[i] (i &gt;= 1)</code></p>
+<p>应用：求下标区间<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mi>l</mi><mo separator="true">,</mo><mtext> </mtext><mi>r</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[l,\ r]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span>上的片段和<code>s[r] - s[l - 1]</code></p>
+<p><img src="https://www.hyperplasma.top/wp-content/uploads/2024/08/a7eacaf9d9db7097bef3396f371fab37-1024x455.png" alt="一维前缀和" /></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> a[N], s[N];		<span class="comment">// [1 ... n]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 初始化前缀和数组 */</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">	s[i] = s[i - <span class="number">1</span>] + a[i];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 求下标区间[l, r]上的片段和 */</span></span><br><span class="line"><span class="type">int</span> sum = s[r] - s[l - <span class="number">1</span>];	<span class="comment">// sum = a[l] + ... + a[r]</span></span><br></pre></td></tr></table></figure>
+<h3 id="42-二维前缀和"><a class="markdownIt-Anchor" href="#42-二维前缀和"></a> 4.2 二维前缀和</h3>
+<p>对于<code>n * m</code>的矩阵<code>a[n][m]</code>，规定<code>a[i][j]</code>的<strong>二维前缀和</strong><code>s[i][j]</code>为元素<code>a[i][j]</code><strong>左上角</strong>所有元素的和。</p>
+<p>求法：<code>s[0][j] = s[i][0] = s[0][0] = 0, s[i][j] = s[i - 1][j] + s[i][j - 1] - s[i - 1][j - 1] + a[i][j] (i, j &gt;= 1)</code></p>
+<p>应用：求下图以<code>(x1, y1)</code>为左上角、<code>(x2, y2)</code>为右下角的子矩阵（含边界）上的片段和，只需将整块左上矩形面积减去红、绿区域（不含待求区域边界）面积再补上多减去的重叠区域面积，即为<code>S = s[x2][y2] - s[x2][y1 - 1] - s[x1 - 1][y2] + s[x1 - 1][y1 - 1]</code></p>
+<p><img src="https://www.hyperplasma.top/wp-content/uploads/2024/08/00e4c1a9c31ed3cd0f74a9109a008c08-300x258.png" alt="二维前缀和" /></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> n, m;</span><br><span class="line"><span class="type">int</span> a[N][N], s[N][N];	<span class="comment">// [1 ... n][1 ... m]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 初始化前缀和数组 */</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= m; j++) &#123;</span><br><span class="line">        s[i][j] = s[i - <span class="number">1</span>][j] + s[i][j - <span class="number">1</span>] - s[i - <span class="number">1</span>][j - <span class="number">1</span>] + a[i][j];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 求以(x1, y1)为左上角、(x2, y2)为右下角的子矩阵（含边界）上的片段和 */</span></span><br><span class="line"><span class="type">int</span> sum = s[x2][y2] - s[x2][y1 - <span class="number">1</span>] - s[x1 - <span class="number">1</span>][y2] + s[x1 - <span class="number">1</span>][y1 - <span class="number">1</span>];</span><br></pre></td></tr></table></figure>
+<h3 id="43-一维差分"><a class="markdownIt-Anchor" href="#43-一维差分"></a> 4.3 一维差分</h3>
+<p>由数组<code>a[1], a[2], ... ,a[n]</code>构造<strong>差分</strong>数组<code>b[1], b[2], ... , b[n]</code>，使得<code>a[i] = b[1] + b[2] + ... + b[i]</code>，<code>b[i] = a[i] - a[i - 1]</code></p>
+<p>应用：给区间<code>[l, r]</code>上所有数加上<code>C</code>，时间复杂度 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span>。方法如下</p>
+<ol>
+<li>给<code>b[l]</code>加上<code>C</code>，使得<code>a[l], a[l + 1], ... , a[n]</code>均加上了<code>C</code></li>
+<li>给<code>b[r + 1]</code>减去<code>C</code>，使得<code>a[r + 1], a[r + 2], ... , a[n]</code>均减去了本不应加的<code>C</code></li>
+</ol>
+<blockquote>
+<p>对于原差分数组的初始化亦可采用上述操作，赋值<code>a[i]</code>即相当于给区间<code>[i, i]</code>加上<code>a[i]</code></p>
+</blockquote>
+<p><img src="https://www.hyperplasma.top/wp-content/uploads/2024/08/02e876c1c30e31347bd366270e3de295-1024x339.png" alt="一维差分" /></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">int</span> a[N], b[N];		<span class="comment">// [1 ... n]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 给区间[l, r]上所有数加上c */</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">insert</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r, <span class="type">int</span> c)</span> </span>&#123;</span><br><span class="line">	b[l] += c;</span><br><span class="line">    b[r + <span class="number">1</span>] -= c;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 初始化差分数组 */</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">	<span class="built_in">insert</span>(i, i, a[i]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 将操作过的差分数组变为原数组（前缀和与差分互为逆运算） */</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">	b[i] += b[i - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="44-二维差分"><a class="markdownIt-Anchor" href="#44-二维差分"></a> 4.4 二维差分</h3>
+<p>参考一维差分与二维前缀和，<strong>差分矩阵</strong>中每个数都蕴含于其<strong>右下矩阵</strong>中的每个数。</p>
+<p>操作：给下图以<code>(x1, y1)</code>为左上角、<code>(x2, y2)</code>为右下角的子矩形（含边界）加上<code>C</code>，只需给整个右下角加<code>C</code>，给红、绿区域各减<code>C</code>，最后再给重叠区域加上多减的<code>C</code>即可</p>
+<blockquote>
+<p>对于原差分矩阵初始化操作亦可采用上述操作，参考一维差分</p>
+</blockquote>
+<p><img src="https://www.hyperplasma.top/wp-content/uploads/2024/08/3e19471c67d2e011231f5df057af83e9-300x243.png" alt="二维差分" /></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> n, m;</span><br><span class="line"><span class="type">int</span> a[N][N], b[N][N];		<span class="comment">// [1 ... n][1 ... m]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 给以(x1, y1)为左上角、(x2, y2)为右下角的子矩阵（含边界）加上c */</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">insert</span><span class="params">(<span class="type">int</span> x1, <span class="type">int</span> y1, <span class="type">int</span> x2, <span class="type">int</span> y2, <span class="type">int</span> c)</span> </span>&#123;</span><br><span class="line">    b[x1][y1] += c;</span><br><span class="line">    b[x2 + <span class="number">1</span>][y1] -= c;</span><br><span class="line">    b[x1][y2 + <span class="number">1</span>] -= c;</span><br><span class="line">    b[x2 + <span class="number">1</span>][y2 + <span class="number">1</span>] += c;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 初始化差分矩阵 */</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= m; j++) &#123;</span><br><span class="line">        <span class="built_in">insert</span>(i, j, i, j, a[i][j]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 将操作过的差分矩阵变为原矩阵：求差分矩阵的前缀和 */</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= m; j++) &#123;</span><br><span class="line">        b[i][j] += b[i - <span class="number">1</span>][j] + b[i][j - <span class="number">1</span>] - b[i - <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="5-位运算"><a class="markdownIt-Anchor" href="#5-位运算"></a> 5 位运算</h2>
+<p><a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/803/">例题</a></p>
+<ol>
+<li>求 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">n</span></span></span></span> 的二进制表示中第 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span> 位数字：<code>n &gt;&gt; k &amp; 1</code> （先把第 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span> 位数字移到最后一位，再看个位是几，即和 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> 做<strong>按位与</strong>运算）</li>
+<li><code>lowbit(n)</code>：返回 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">n</span></span></span></span> 的最后一位 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span></li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">lowbit</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x &amp; -x;  <span class="comment">// -n = ~n + 1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 应用 */</span></span><br><span class="line"><span class="comment">// 输出整数x的二进制表示（31位）</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">31</span>; i++) &#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, x &gt;&gt; i &amp; <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 统计x的二进制表示中有几位1</span></span><br><span class="line"><span class="type">int</span> cnt = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span> (x) &#123;</span><br><span class="line">    x -= <span class="built_in">lowbit</span>(x);</span><br><span class="line">    cnt++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="6-双指针算法"><a class="markdownIt-Anchor" href="#6-双指针算法"></a> 6 双指针算法</h2>
+<p>常见的双指针问题：</p>
+<ol>
+<li>对于一个序列，用两个指针维护一段区间</li>
+<li>对于两个序列，维护某种次序，比如归并排序中合并两个有序序列的操作</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 朴素算法 O(n^2) */</span></span><br><span class="line"><span class="comment">// for (int i = 0; i &lt; n; i++) &#123;</span></span><br><span class="line"><span class="comment">//	 for (int j = i; j &lt; n; j++) &#123;</span></span><br><span class="line"><span class="comment">//		 ...</span></span><br><span class="line"><span class="comment">//	 &#125;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 双指针优化后的算法 O(n) */</span></span><br><span class="line"><span class="comment">/* 例1 */</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>; i &lt; n; i++) &#123;	<span class="comment">// i为子序列右端点，j为左端动点</span></span><br><span class="line">    <span class="keyword">while</span> (j &lt; i &amp;&amp; <span class="built_in">check</span>(i, j)) &#123;</span><br><span class="line">        ...</span><br><span class="line">        j++;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 例2 */</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n;) &#123;	<span class="comment">// i为子序列左端点，j为动态右端动点</span></span><br><span class="line">    <span class="type">int</span> j = i;</span><br><span class="line">    <span class="keyword">while</span> (j &lt; n &amp;&amp; <span class="built_in">check</span>(i, j)) &#123;</span><br><span class="line">        ...</span><br><span class="line">        j++;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    i = j + <span class="number">1</span>;	<span class="comment">// 将i直接移至j附近</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="7-离散化"><a class="markdownIt-Anchor" href="#7-离散化"></a> 7 离散化</h2>
+<p>高度分散的整数 → <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">0, 1, 2, ..., n-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> 或 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">1, 2, ..., n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">n</span></span></span></span></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; alls;   <span class="comment">// 存储所有待离散化的值</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 离散化（保序） */</span></span><br><span class="line"><span class="built_in">sort</span>(alls.<span class="built_in">begin</span>(), all.<span class="built_in">end</span>());	<span class="comment">// 将所有值排序</span></span><br><span class="line">alls.<span class="built_in">erase</span>(<span class="built_in">unique</span>(alls.<span class="built_in">begin</span>(), alls.<span class="built_in">end</span>()), all.<span class="built_in">end</span>());	<span class="comment">// 去重</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 根据离散化的值k获取原来的值x */</span></span><br><span class="line"><span class="type">int</span> x = alls[k];</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 二分求出x对应的离散化的值 */</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">find</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> l = <span class="number">0</span>, r = alls.<span class="built_in">size</span>() - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (l &lt; r) &#123;	<span class="comment">// 找到第1个大于等于x的位置（唯一）</span></span><br><span class="line">        <span class="type">int</span> mid = l + r &gt;&gt; <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (alls[mid] &gt;= x) &#123;</span><br><span class="line">			r = mid;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			l = mid + <span class="number">1</span>;</span><br><span class="line">		&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> r + <span class="number">1</span>;	<span class="comment">// 这里+1是为了映射到1, 2, ..., alls.size()</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="8-区间合并"><a class="markdownIt-Anchor" href="#8-区间合并"></a> 8 区间合并</h2>
+<ol>
+<li>先将所有区间按<strong>左端点</strong>大小排序</li>
+<li>当前维护区间与下一区间之间分三种情况：包含、有交集（含端点）、无交集
+<ul>
+<li>包含：无需操作（实为有交集的特殊情况）</li>
+<li>有交集：更新当前区间<strong>右端点</strong>为较大的即可，继续维护</li>
+<li>无交集：<strong>结束维护</strong>当前区间并保存，更新为下一区间</li>
+</ul>
+</li>
+<li>迭代结束后保存当前维护区间</li>
+</ol>
+<p><img src="https://www.hyperplasma.top/wp-content/uploads/2024/08/4f51f114e834590a131d60a4e160519a-1024x480.png" alt="区间合并" /></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> pair&lt;<span class="type">int</span>, <span class="type">int</span>&gt; PII;	<span class="comment">// &lt;st, ed&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 合并区间 */</span></span><br><span class="line"><span class="function">vector&lt;PII&gt; <span class="title">merge</span><span class="params">(vector&lt;PII&gt; &amp;segs)</span> </span>&#123;</span><br><span class="line">    vector&lt;PII&gt; res;</span><br><span class="line">  </span><br><span class="line">    <span class="built_in">sort</span>(seg.<span class="built_in">begin</span>(), seg.<span class="built_in">end</span>());	<span class="comment">// 默认优先按first（左端点大小）排序</span></span><br><span class="line">  </span><br><span class="line">    <span class="type">int</span> st = -INF, ed = -INF;	<span class="comment">// 当前维护区间（初始化为负无穷）</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;seg : segs) &#123;</span><br><span class="line">        <span class="keyword">if</span> (ed &lt; seg.first) &#123;	<span class="comment">// 若与当前维护区间无交集</span></span><br><span class="line">            <span class="keyword">if</span> (st != -INF) &#123;</span><br><span class="line">				res.<span class="built_in">push_back</span>(&#123;st, ed&#125;);	<span class="comment">// 当前区间结束维护并保存</span></span><br><span class="line">			&#125;</span><br><span class="line">            st = seg.first;	<span class="comment">// 转移至此区间</span></span><br><span class="line">            ed = seg.second;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			ed = <span class="built_in">max</span>(ed, seg.second);	<span class="comment">// 有交集则比较右端点即可，继续维护</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">if</span> (st != -INF) &#123;</span><br><span class="line">		res.<span class="built_in">push_back</span>(&#123;st, ed&#125;);	<span class="comment">// 保存最后一个区间</span></span><br><span class="line">	&#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/C/" rel="tag"># C++</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/p/303d117aa0ec/" rel="prev" title="0854考研强化笔记">
+      <i class="fa fa-chevron-left"></i> 0854考研强化笔记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/p/b75bd53a49fd/" rel="next" title="Hyplus Navigator">
+      Hyplus Navigator <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%8E%92%E5%BA%8F"><span class="nav-text"> 1 排序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#11-%E7%9B%B4%E6%8E%A5%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F"><span class="nav-text"> 1.1 直接插入排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F"><span class="nav-text"> 1.2 快速排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F"><span class="nav-text"> 1.3 归并排序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%BA%8C%E5%88%86"><span class="nav-text"> 2 二分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-c%E9%AB%98%E7%B2%BE%E5%BA%A6%E8%BF%90%E7%AE%97"><span class="nav-text"> 3 C++高精度运算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#31-%E9%AB%98%E7%B2%BE%E5%BA%A6%E5%8A%A0%E6%B3%95"><span class="nav-text"> 3.1 高精度加法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#32-%E9%AB%98%E7%B2%BE%E5%BA%A6%E5%87%8F%E6%B3%95"><span class="nav-text"> 3.2 高精度减法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#33-%E9%AB%98%E7%B2%BE%E5%BA%A6%E4%B9%98%E4%BD%8E%E7%B2%BE%E5%BA%A6"><span class="nav-text"> 3.3 高精度乘低精度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#34-%E9%AB%98%E7%B2%BE%E5%BA%A6%E9%99%A4%E4%BB%A5%E4%BD%8E%E7%B2%BE%E5%BA%A6"><span class="nav-text"> 3.4 高精度除以低精度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%89%8D%E7%BC%80%E5%92%8C-%E5%B7%AE%E5%88%86"><span class="nav-text"> 4 前缀和、差分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#41-%E4%B8%80%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C"><span class="nav-text"> 4.1 一维前缀和</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#42-%E4%BA%8C%E7%BB%B4%E5%89%8D%E7%BC%80%E5%92%8C"><span class="nav-text"> 4.2 二维前缀和</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#43-%E4%B8%80%E7%BB%B4%E5%B7%AE%E5%88%86"><span class="nav-text"> 4.3 一维差分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#44-%E4%BA%8C%E7%BB%B4%E5%B7%AE%E5%88%86"><span class="nav-text"> 4.4 二维差分</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E4%BD%8D%E8%BF%90%E7%AE%97"><span class="nav-text"> 5 位运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E5%8F%8C%E6%8C%87%E9%92%88%E7%AE%97%E6%B3%95"><span class="nav-text"> 6 双指针算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E7%A6%BB%E6%95%A3%E5%8C%96"><span class="nav-text"> 7 离散化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E5%8C%BA%E9%97%B4%E5%90%88%E5%B9%B6"><span class="nav-text"> 8 区间合并</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Akira37"
+      src="/images/hyperplasma-logo-v1-white-bg.png">
+  <p class="site-author-name" itemprop="name">Akira37</p>
+  <div class="site-description" itemprop="description">实用编程技术教程</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hyperplasma" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hyperplasma" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/akira37" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;akira37" rel="noopener" target="_blank"><i class="fab fa-git-alt fa-fw"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/12103859" title="Bilibili → https:&#x2F;&#x2F;space.bilibili.com&#x2F;12103859" rel="noopener" target="_blank"><i class="fa fa-television fa-fw"></i>Bilibili</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://hyperplasma.ysepan.com/" title="E-Pan → http:&#x2F;&#x2F;hyperplasma.ysepan.com" rel="noopener" target="_blank"><i class="fa fa-hdd fa-fw"></i>E-Pan</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:akira37@foxmail.com" title="E-Mail → mailto:akira37@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.hyperplasma.top/" title="https:&#x2F;&#x2F;www.hyperplasma.top" rel="noopener" target="_blank">Another Hyplus</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-bolt"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Akira37</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">13k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">12 分钟</span>
+</div>
+  <div class="powered-by">Hyperplasma
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='85, 85, 85' opacity='0.5' zIndex='-1' count='72' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+      
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0/dist/katex.min.css">
+
+
+  
+
+</body>
+</html>
